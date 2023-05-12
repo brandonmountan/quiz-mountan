@@ -1,21 +1,21 @@
 // DOM elements
 var timerEl = document.getElementById("timer-count");
 var startButton = document.getElementById("start-button");
-var submitChoiceButton = document.getElementById("submitChoice-button");
 var quizEl = document.getElementById("quiz");
 var questionEl = document.getElementById("question");
 var choicesEl = document.getElementById("choices");
 var resultEl = document.getElementById("result");
+var initialsEl = document.getElementById("initials");
+var submitBtn = document.getElementById("submit");
+var userInitialsSpan = document.getElementById("user-intials");
+var userScoreSpan = document.getElementById("user-score");
 
 var timeLeft = 60;
-
 var timer;
-
 var score = 0;
 
 // Timer
 function startTimer() {
-
 
     timer = setInterval(function () {
 
@@ -52,6 +52,21 @@ var quizQuestions = [
         choices: ["Mars", "Saturn", "Jupiter", "Earth"],
         answer: 2
     },
+    {
+        question: "What is the capital of France?",
+        choices: ["Paris", "Berlin", "London"],
+        answer: 0
+      },
+      {
+        question: "Which year was JavaScript first released?",
+        choices: ["1995", "2005", "2010"],
+        answer: 0
+      },
+      {
+        question: "Which planet in our solar system is known for its beautiful ring system?",
+        choices: ["Mars", "Jupiter", "Saturn", "Uranus"],
+        answer: 2
+      },
 ];
 
 
@@ -71,28 +86,21 @@ function displayQuestion() {
         var button = document.createElement("button");
         button.dataset.quizbutton = "true";
         button.innerHTML = choice;
-        
         choicesEl.appendChild(button);
     }
 };
 
+
 document.addEventListener("click", function (event) {
-    // console.log(event.target);
-    // selectAnswer(i);
     if (event.target.dataset.quizbutton === "true") {
         selectAnswer(event.target.innerHTML);
-            // console.log(event.target.innerHTML)
-        // console.log("hello")
     }
 });
 
+// Assigning the correct answer and taking time off if the user answers incorrectly
 function selectAnswer(userChoice) {
     var question = quizQuestions[currentQuestionIndex];
     var correctAnswer = question.answer;
-    console.log(question);
-    console.log(userChoice);
-    console.log(correctAnswer);
-    console.log(quizQuestions[currentQuestionIndex].choices.indexOf(userChoice));
     if (quizQuestions[currentQuestionIndex].choices.indexOf(userChoice) === correctAnswer) {
         score++;
     } else {
@@ -111,9 +119,34 @@ function selectAnswer(userChoice) {
     }
 }
 
+// What to display when the quiz ends
 function endQuiz() {
     clearInterval(timer);
     questionEl.textContent = "Quiz Complete";
     choicesEl.style.display = "none";
     resultEl.textContent = `Final score: ${score}`;
 }
+
+renderLastRegistered();
+
+function renderLastRegistered() {
+    var userResults = localStorage.getItem("score");
+    var userInitials = localStorage.getItem("initials");
+
+    if (!userResults || !userInitials) {
+        return;
+    }
+
+    userScoreSpan.textContent = userResults;
+    userInitialsSpan.textContent = userInitials;
+}
+
+submitBtn.addEventListener("click", function(event) {
+
+    event.preventDefault();
+
+    var userResults = document.querySelector("#user-score").value;
+
+    localStorage.setItem("score", userResults);
+    renderLastRegistered();
+})
