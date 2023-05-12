@@ -1,17 +1,23 @@
+// DOM elements
 var timerEl = document.getElementById("timer-count");
 var startButton = document.getElementById("start-button");
-var submitButton = document.getElementById("submit-button");
+var submitChoiceButton = document.getElementById("submitChoice-button");
 var quizEl = document.getElementById("quiz");
 var questionEl = document.getElementById("question");
 var choicesEl = document.getElementById("choices");
+var resultEl = document.getElementById("result");
 
+var timeLeft = 60;
 
+var timer;
 
+var score = 0;
+
+// Timer
 function startTimer() {
 
-    var timeLeft = 60;
 
-    var timer = setInterval(function () {
+    timer = setInterval(function () {
 
         if (timeLeft > 1) {
             timerEl.textContent = timeLeft + ' seconds remaining';
@@ -26,12 +32,15 @@ function startTimer() {
     }, 1000);
 }
 
+// Event Listeners
 startButton.addEventListener('click', startTimer);
 
 startButton.addEventListener('click', displayQuestion);
 
 
 
+
+// Quiz Questions
 var quizQuestions = [
     {
         question: "What is the capital of Montana?",
@@ -41,14 +50,16 @@ var quizQuestions = [
     {
         question: "What is the largest planet in our solar system?",
         choices: ["Mars", "Saturn", "Jupiter", "Earth"],
-        answer: 3
+        answer: 2
     },
 ];
+
+
 
 var currentQuestionIndex = 0;
 
 
-
+// Displaying questions on the screen
 function displayQuestion() {
     var question = quizQuestions[currentQuestionIndex];
     questionEl.textContent = question.question;
@@ -57,20 +68,32 @@ function displayQuestion() {
 
     for (let i = 0; i < question.choices.length; i++) {
         var choice = question.choices[i];
-        var li = document.createElement("li");
-        li.textContent = choice;
-        li.addEventListener("click", function () {
-            selectAnswer(i);
-        });
-        choicesEl.appendChild(li);
+        var button = document.createElement("button");
+        button.dataset.quizbutton = "true";
+        button.innerHTML = choice;
+        
+        choicesEl.appendChild(button);
     }
 };
 
-function selectAnswer(choiceIndex) {
-    var question = quiz[currentQuestionIndex];
-    var correctAnswer = question.correctAnswer;
+document.addEventListener("click", function (event) {
+    // console.log(event.target);
+    // selectAnswer(i);
+    if (event.target.dataset.quizbutton === "true") {
+        selectAnswer(event.target.innerHTML);
+            // console.log(event.target.innerHTML)
+        // console.log("hello")
+    }
+});
 
-    if (choiceIndex === correctAnswer) {
+function selectAnswer(userChoice) {
+    var question = quizQuestions[currentQuestionIndex];
+    var correctAnswer = question.answer;
+    console.log(question);
+    console.log(userChoice);
+    console.log(correctAnswer);
+    console.log(quizQuestions[currentQuestionIndex].choices.indexOf(userChoice));
+    if (quizQuestions[currentQuestionIndex].choices.indexOf(userChoice) === correctAnswer) {
         score++;
     } else {
         timeLeft -= 10;
@@ -81,9 +104,16 @@ function selectAnswer(choiceIndex) {
 
     currentQuestionIndex++;
 
-    if (currentQuestionIndex == quiz.length) {
+    if (currentQuestionIndex == quizQuestions.length) {
         endQuiz();
     } else {
         displayQuestion();
     }
+}
+
+function endQuiz() {
+    clearInterval(timer);
+    questionEl.textContent = "Quiz Complete";
+    choicesEl.style.display = "none";
+    resultEl.textContent = `Final score: ${score}`;
 }
