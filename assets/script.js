@@ -7,13 +7,14 @@ var choicesEl = document.getElementById("choices");
 var resultEl = document.getElementById("result");
 var initialsEl = document.getElementById("initials");
 var submitBtn = document.getElementById("submit");
-var userInitialsSpan = document.getElementById("user-intials");
-var userScoreSpan = document.getElementById("user-score");
+var userInitialsSpan = document.querySelector("#user-intials");
+var userScoreSpan = document.querySelector("#user-score");
 
 var timeLeft = 60;
 var timer;
 var score = 0;
 
+renderLastRegistered();
 // Timer
 function startTimer() {
 
@@ -127,26 +128,37 @@ function endQuiz() {
     resultEl.textContent = `Final score: ${score}`;
 }
 
-renderLastRegistered();
 
-function renderLastRegistered() {
-    var userResults = localStorage.getItem("score");
-    var userInitials = localStorage.getItem("initials");
 
-    if (!userResults || !userInitials) {
-        return;
-    }
+// could not figure out local storage...
 
-    userScoreSpan.textContent = userResults;
-    userInitialsSpan.textContent = userInitials;
-}
+// function renderLastRegistered() {
+//     var userResults = localStorage.getItem("score");
+//     var userInitials = localStorage.getItem("initials");
 
-submitBtn.addEventListener("click", function(event) {
+//     if (!userResults || !userInitials) {
+//         return;
+//     }
 
-    event.preventDefault();
+//     resultEl.textContent = userResults;
+//     initialsEl.textContent = userInitials;
+// }
 
-    var userResults = document.querySelector("#user-score").value;
+// submitBtn.addEventListener("click", function(event) {
 
-    localStorage.setItem("score", userResults);
-    renderLastRegistered();
-})
+//     event.preventDefault();
+
+//     var userResults = document.querySelector("#user-score").value;
+//     var userInitials = document.querySelector("#user-intials").value;
+
+//     if (userResults === "") {
+//         displayMessage("error");
+//     } else if (userInitials === "") {
+//         displayMessage("error");
+//     } else {
+
+//     localStorage.setItem("score", userResults);
+//     localStorage.setItem("intials", userInitials);
+//     renderLastRegistered();
+//     }
+// })
